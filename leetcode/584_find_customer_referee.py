@@ -9,6 +9,7 @@ import pandas as pd
 def find_customer_referee(customer: pd.DataFrame) -> pd.DataFrame:
     # Note: We cannot use Python's 'or' here, because it only works with single booleans.
     # For element-wise comparisons on Series/DataFrames, we must use '|' instead.
+    # instead of isnull(), we can also use the isna(). Both are functionally same
     condition = (customer["referee_id"] != 2) | (customer["referee_id"].isnull())
     return customer[condition][["name"]]
 
