@@ -8,6 +8,10 @@ import pandas as pd
 
 def find_products(products: pd.DataFrame) -> pd.DataFrame:
     # Whenever we have two conditions, we will use bracket
+
+    # Note: We cannot use Python's 'and' here, because it only works with single booleans.
+    # products["low_fats"] == "Y" returns a Series of booleans (one per row), not a single value.
+    # For element-wise comparisons on Series/DataFrames, we must use '&' instead.
     condition = (products["low_fats"] == "Y") & (products["recyclable"] == "Y")
 
     # Note: products[condition]['product_id'] returns a Series

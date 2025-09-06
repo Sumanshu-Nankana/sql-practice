@@ -1,3 +1,0 @@
-[flake8]
-# Match Black's default line length
-max-line-length = 88

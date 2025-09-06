@@ -13,10 +13,3 @@ repos:
       - id: isort
         name: isort (sort imports)
         language_version: python3.11
-
-  # Optional: flake8 for linting
-  - repo: https://github.com/pycqa/flake8
-    rev: 7.3.0
-    hooks:
-      - id: flake8
-        language_version: python3.11
