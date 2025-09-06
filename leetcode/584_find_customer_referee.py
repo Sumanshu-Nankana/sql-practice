@@ -25,3 +25,6 @@ if __name__ == "__main__":
     customer = pd.DataFrame(data, columns=["id", "name", "referee_id"]).astype(
         {"id": "Int64", "name": "object", "referee_id": "Int64"}
     )
+    output = find_customer_referee(customer)
+    print(output)
+    print(type(output))
