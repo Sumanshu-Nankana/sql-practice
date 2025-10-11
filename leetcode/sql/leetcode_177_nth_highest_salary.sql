@@ -11,7 +11,30 @@ BEGIN
     -- Write your PostgreSQL query statement below.
     with cte as (SELECT e.salary, DENSE_RANK() OVER (ORDER BY e.SALARY DESC) AS RANKING FROM EMPLOYEE e)
     SELECT DISTINCT COALESCE(e.SALARY, NULL) FROM CTE e WHERE RANKING = N
+  );
+END;
+$$ LANGUAGE plpgsql;
 
+---
+
+CREATE OR REPLACE FUNCTION NthHighestSalary(N INT) RETURNS TABLE (Salary INT) AS $$
+BEGIN
+  RETURN QUERY (
+    -- Write your PostgreSQL query statement below.
+    with cte as (SELECT e.salary, DENSE_RANK() OVER (ORDER BY e.SALARY DESC) AS RANKING FROM EMPLOYEE e)
+    SELECT(SELECT DISTINCT e.SALARY FROM CTE e WHERE RANKING = N)
+  );
+END;
+$$ LANGUAGE plpgsql;
+
+---
+
+CREATE OR REPLACE FUNCTION NthHighestSalary(N INT) RETURNS TABLE (Salary INT) AS $$
+BEGIN
+  RETURN QUERY (
+    -- Write your PostgreSQL query statement below.
+    with cte as (SELECT e.salary, DENSE_RANK() OVER (ORDER BY e.SALARY DESC) AS RANKING FROM EMPLOYEE e)
+    SELECT COALESCE((SELECT DISTINCT e.SALARY FROM CTE e WHERE RANKING = N), NULL)
   );
 END;
 $$ LANGUAGE plpgsql;

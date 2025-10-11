@@ -28,6 +28,11 @@ SELECT(
 SELECT DISTINCT salary as SecondHighestSalary FROM employee_salary WHERE ranking = 2
 );
 
+-- Answer using COALESCE
+with cte as (SELECT id, salary, dense_rank() over (order by salary desc) as ranking FROM EMPLOYEE)
+SELECT COALESCE((SELECT distinct salary  FROM CTE where ranking = 2), NULL) as SecondHighestSalary
+
+
 -- Answer (Using OFFSET and LIMIT)
 SELECT (
     SELECT DISTINCT SALARY as secondhighestsalary from employee
