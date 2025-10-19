@@ -17,3 +17,16 @@ SELECT accepter_id from RequestAccepted
 SELECT requester_id as id, count(*) as num from cte
 group by requester_id
 order by num desc limit 1
+
+
+-- Follow UP : Write your PostgreSQL query statement below
+with cte as (
+SELECT requester_id from RequestAccepted
+UNION ALL
+SELECT accepter_id from RequestAccepted),
+cte2 as(
+select requester_id as id, count(*) as num from cte group by requester_id
+),
+cte3 as (
+select id, num, dense_rank() over (order by num desc) as rnk from cte2)
+select id, num from cte3 where rnk = 1
