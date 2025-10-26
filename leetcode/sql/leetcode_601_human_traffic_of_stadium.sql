@@ -14,6 +14,7 @@ insert into Stadium (id, visit_date, people) values ('8', '2017-01-09', '188');
 
 -- Write your PostgreSQL query statement below
 with cte as(
-select *, id - row_number() over(order by id) as grp_id from stadium where people >= 100)
+SELECT *, id - row_number() over(order by id) as grp_id FROM stadium where people >= 100)
 select id, visit_date, people from cte where grp_id in (
-select grp_id from cte group by grp_id having count(*) >=3);
+select grp_id from cte group by grp_id having count(*) >= 3)
+order by visit_date
