@@ -11,7 +11,9 @@ insert into Activity (player_id, device_id, event_date, games_played) values ('3
 
 -- Write your PostgreSQL query statement below
 with cte as(
-select *, LEAD(event_date) over(partition by player_id order by event_date) as next_day,
-DENSE_RANK() OVER(PARTITION BY player_id order by event_date) as rnk from activity)
-select round(cast(sum(case when next_day - event_date = 1 then 1 else 0 end) as decimal) / count(*),2) as fraction
+select *,
+    LEAD(event_date) over(partition by player_id order by event_date) as next_login_date,
+    DENSE_RANK() OVER(PARTITION BY player_id order by event_date) as rnk from activity)
+select
+    round(cast(COUNT(CASE WHEN next_login_date - event_date = 1 THEN 1 END) as decimal) / count(*),2) as fraction
 from cte where rnk = 1
