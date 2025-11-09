@@ -130,7 +130,7 @@ cte9 AS (
     HAVING SUM(vaid_or_not) = 0
        AND cycle_length >= 3
 )
--- Final aggregation with only one join needed
+-- Final aggregation
 SELECT cte9.student_id,
        cte9.student_name,
        cte9.major,
