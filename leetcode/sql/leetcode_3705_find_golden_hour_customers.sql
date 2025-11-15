@@ -31,21 +31,21 @@ insert into restaurant_orders (order_id, customer_id, order_timestamp, order_amo
 
 with cte as(
 SELECT *,
-(CASE WHEN (CAST(order_timestamp as TIME) BETWEEN '11:00:00' and '14:00:00') or
-(CAST(order_timestamp as TIME) BETWEEN '18:00:00' AND '21:00:00') THEN 1 ELSE 0 end)
-as is_peak_order,
-(CASE WHEN order_rating is null THEN 0 ELSE 1 end) as is_rated
-from restaurant_orders),
+(CASE WHEN (CAST(order_timestamp AS TIME) BETWEEN '11:00:00' AND '14:00:00')
+OR
+(CAST(order_timestamp as TIME) BETWEEN '18:00:00' AND '21:00:00') THEN 1 ELSE 0 END) AS is_peak_order,
+(CASE WHEN order_rating is null then 0 else 1 end) as is_rated
+FROM restaurant_orders),
 
 cte1 as(
-select customer_id, ROUND((sum(is_peak_order)*100.0/count(*)), 0) as peak_hour_percentage,
-ROUND(sum(is_rated)*100.0/count(*), 0) as rating_percentage, ROUND(avg(order_rating ),2) as average_rating,
-count(*) as total_orders
-from cte group by customer_id)
+SELECT customer_id,
+ROUND(SUM(is_peak_order)*100.0/ count(*),0) as peak_hour_percentage,
+ROUND(SUM(is_rated)*100.0/count(*),0) as rating_perecentage,
+ROUND(avg(order_rating),2) as average_rating,
+count(*) as total_orders from cte
+GROUP BY customer_id)
 
-select cte.customer_id, cte1.total_orders, cte1.peak_hour_percentage, cte1.average_rating
-from cte left join cte1 on cte.customer_id = cte1.customer_id
-group by cte.customer_id,cte1.peak_hour_percentage, cte1.rating_percentage, cte1.average_rating, cte1.total_orders
-having cte1.peak_hour_percentage >= 60 and cte1.rating_percentage >= 50
-and count(*) >= 3 and cte1.average_rating >= 4
-ORDER BY cte1.average_rating desc, cte.customer_id desc
+select customer_id, total_orders, peak_hour_percentage, average_rating from cte1
+where peak_hour_percentage >= 60 and total_orders >=3
+and average_rating >= 4 and rating_perecentage >= 50
+order by average_rating desc, customer_id desc
