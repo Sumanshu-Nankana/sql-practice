@@ -40,12 +40,12 @@ FROM restaurant_orders),
 cte1 as(
 SELECT customer_id,
 ROUND(SUM(is_peak_order)*100.0/ count(*),0) as peak_hour_percentage,
-ROUND(SUM(is_rated)*100.0/count(*),0) as rating_perecentage,
+ROUND(SUM(is_rated)*100.0/count(*),0) as rating_percentage,
 ROUND(avg(order_rating),2) as average_rating,
 count(*) as total_orders from cte
 GROUP BY customer_id)
 
 select customer_id, total_orders, peak_hour_percentage, average_rating from cte1
 where peak_hour_percentage >= 60 and total_orders >=3
-and average_rating >= 4 and rating_perecentage >= 50
+and average_rating >= 4 and rating_percentage >= 50
 order by average_rating desc, customer_id desc
